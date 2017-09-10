@@ -21,76 +21,65 @@
 </head>
 
 <body>
-<div class="container">
-    <div class="row">
-        <div id="wrapper">
-            <!-- Sidebar -->
-            <div id="sidebar-wrapper">
-                <ul class="sidebar-nav" style="margin-left:0;">
-                    <li class="sidebar-brand">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav" style="margin-left:0;">
+            <li class="sidebar-brand">
 
-                        <a href="#menu-toggle" id="menu-toggle" style="margin-top:20px;float:right;"> <i
-                                class="fa fa-bars " style="font-size:20px !Important;" aria-hidden="true"
-                                aria-hidden="true"></i>
+                <a href="#menu-toggle" id="menu-toggle" style="margin-top:20px;float:right;"> <i
+                        class="fa fa-bars " style="font-size:20px !Important;" aria-hidden="true"
+                        aria-hidden="true"></i>
 
-                    </li>
-                    <li>
-                        <a href="{% url 'main_page' %}"><i class="fa fa-sort-alpha-asc " aria-hidden="true"> </i> <span
-                                style="margin-left:10px;"> 調査記録 </span> </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'statistic_page' %}"> <i class="fa fa-play-circle-o " aria-hidden="true"> </i>
-                            <span
-                                    style="margin-left:10px;"> 調査状況 </span> </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'map_page' %}"> <i class="fa fa-puzzle-piece" aria-hidden="true"> </i> <span
-                                style="margin-left:10px;"> 調査状況MAP </span> </a>
-                    </li>
-                </ul>
+            </li>
+            <li>
+                <a href="{% url 'main_page' %}"><i class="fa fa-sort-alpha-asc " aria-hidden="true"> </i> <span
+                        style="margin-left:10px;"> 調査記録 </span> </a>
+            </li>
+            <li>
+                <a href="{% url 'statistic_page' %}"> <i class="fa fa-play-circle-o " aria-hidden="true"> </i>
+                    <span
+                            style="margin-left:10px;"> 調査状況 </span> </a>
+            </li>
+            <li>
+                <a href="{% url 'map_page' %}"> <i class="fa fa-puzzle-piece" aria-hidden="true"> </i> <span
+                        style="margin-left:10px;"> 調査状況MAP </span> </a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper" style="margin-left:20px;">
+        <div class="container-fluid">
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>樹種</th>
+                        <th>直径</th>
+                        <th>緯度</th>
+                        <th>経度</th>
+                        <th>記録時間</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for record in records %}
+                        <tr>
+                            <td>{{ record.tree_species }}</td>
+                            <td>{{ record.diameter }}</td>
+                            <td>{{ record.latitude }}</td>
+                            <td>{{ record.longitude }}</td>
+                            <td>{{ record.created_at }}</td>
+                            <td><a href="{% url 'delete_record' %}?id={{ record.id }}">削除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <!-- /#page-content-wrapper -->
+
             </div>
-            <div class="row">
-                <div id="wrapper">
-                    <!-- /#sidebar-wrapper -->
-                    <div id="page-content-wrapper">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12 col-lg-8">
-                                    <div class="table-responsive">
-                                        <table class="table table-sm">
-                                            <thead>
-                                            <tr>
-                                                <th>樹種</th>
-                                                <th>直径</th>
-                                                <th>緯度</th>
-                                                <th>経度</th>
-                                                <th>記録時間</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for record in records %}
-                                                <tr>
-                                                    <td>{{ record.tree_species }}</td>
-                                                    <td>{{ record.diameter }}</td>
-                                                    <td>{{ record.latitude }}</td>
-                                                    <td>{{ record.longitude }}</td>
-                                                    <td>{{ record.created_at }}</td>
-                                                    <td><a href="{% url 'delete_record' %}?id={{ record.id }}">削除</a>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                        <!-- /#page-content-wrapper -->
-
-                                    </div>
-                                    <!-- /#wrapper -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- /#wrapper -->
         </div>
     </div>
 </div>

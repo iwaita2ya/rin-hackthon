@@ -34,11 +34,13 @@
 
                     </li>
                     <li>
-                        <a href="{% url 'main_page' %}"><i class="fa fa-sort-alpha-asc " aria-hidden="true"> </i> <span
-                                style="margin-left:10px;"> 調査記録 </span> </a>
+                        <a href="{% url 'main_page' %}"><i class="fa fa-sort-alpha-asc " aria-hidden="true"> </i>
+                            <span
+                                    style="margin-left:10px;"> 調査記録 </span> </a>
                     </li>
                     <li>
-                        <a href="{% url 'statistic_page' %}"> <i class="fa fa-play-circle-o " aria-hidden="true"> </i>
+                        <a href="{% url 'statistic_page' %}"> <i class="fa fa-play-circle-o "
+                                                                 aria-hidden="true"> </i>
                             <span
                                     style="margin-left:10px;"> 調査状況 </span> </a>
                     </li>
@@ -49,80 +51,61 @@
                 </ul>
             </div>
             <!-- /#sidebar-wrapper -->
-        </div>
-    </div>
-    <div class="row">
-        <div id="wrapper">
-            <!-- Page Content -->
-            <div id="page-content-wrapper">
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form role="form" method="post" action="{% url 'insert_record' %}">
-                                    {% csrf_token %}
-                                    <p> 音声入力を開始する </p>
-                                    <button id="startBtn" disabled="disabled" type="button" class="btn btn-danger">
-                                        Start
-                                    </button>
-                                    <button id="stopBtn" disabled="disabled" type="button" class="btn btn-dark">Stop
-                                    </button>
-                                    <br>
-                                    入力内容: <span id="hypothesisDiv"></span>
-                                    <textarea id="phraseDiv" style="width:500px;height:200px" name="record"
-                                              required></textarea>
-                                    <br>
-                                    状態: <span id="statusDiv"></span><br>
-                                    <br>
-                                    緯度: <span id="latitude"></span><br>
-                                    経度: <span id="longitude"></span><br>
-                                    <span id="getErrMag"></span>
-                                    <br>
-                                    <input type="hidden" name="latitude" id="latitude_v">
-                                    <input type="hidden" name="longitude" id="longitude_v">
-                                    <button type="submit" class="btn btn-danger">登録する</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+            <div id="page-content-wrapper" style="margin-left:20px;">
+                <div class="container">
+                    <form role="form" method="post" action="{% url 'insert_record' %}">
+                        {% csrf_token %}
+                        <p> 音声入力を開始する </p>
+                        <button id="startBtn" disabled="disabled" type="button" class="btn btn-danger">
+                            Start
+                        </button>
+                        <button id="stopBtn" disabled="disabled" type="button" class="btn btn-dark">Stop
+                        </button>
+                        <br>
+                        入力内容: <span id="hypothesisDiv"></span>
+                        <textarea id="phraseDiv" style="width:500px;height:200px" name="record"
+                                  required></textarea>
+                        <br>
+                        状態: <span id="statusDiv"></span><br>
+                        <br>
+                        緯度: <span id="latitude"></span><br>
+                        経度: <span id="longitude"></span><br>
+                        <span id="getErrMag"></span>
+                        <br>
+                        <input type="hidden" name="latitude" id="latitude_v">
+                        <input type="hidden" name="longitude" id="longitude_v">
+                        <button type="submit" class="btn btn-danger">登録する</button>
+                    </form>
                 </div>
             </div>
-
-
-            <div id="page-content-wrapper">
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-8">
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <thead>
-                                        <tr>
-                                            <th>樹種</th>
-                                            <th>直径</th>
-                                            <th>記録時間</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for record in records %}
-                                            <tr>
-                                                <td>{{ record.tree_species }}</td>
-                                                <td>{{ record.diameter }}</td>
-                                                <td>{{ record.created_at }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                    <!-- /#page-content-wrapper -->
-                                </div>
-                            </div>
-                            <!-- /#wrapper -->
-                        </div>
-                    </div>
+            <div id="page-content-wrapper" style="margin-left:20px;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>樹種</th>
+                            <th>直径</th>
+                            <th>記録時間</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for record in records %}
+                            <tr>
+                                <td>{{ record.tree_species }}</td>
+                                <td>{{ record.diameter }}</td>
+                                <td>{{ record.created_at }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- /#page-content-wrapper -->
                 </div>
             </div>
+            <!-- /#wrapper -->
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <!-- Bootstrap core JavaScript -->

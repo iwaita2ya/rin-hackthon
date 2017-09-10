@@ -9,7 +9,8 @@ html, body {
     height: 100%;
 }
 
-#map-google {
-    height: 400px;
+
+table {
     width: 100%;
+    table-layout: fixed !important;
 }

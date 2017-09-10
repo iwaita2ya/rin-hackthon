@@ -44,8 +44,8 @@ def insert_record(request):
     if request.method == 'POST':
         record = request.POST.get('record')
         # TODO: ここでよしなに分割する
-        tree_species = '森林'
-        diameter = 25
+        tree_species = '唐松'
+        diameter = 22
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         # latitude = 13.625335
