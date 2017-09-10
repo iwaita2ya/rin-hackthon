@@ -1,26 +1,57 @@
-import json
+import re
 
 from django.shortcuts import render, get_object_or_404
 from django.core import serializers
-from django.http import HttpResponse, JsonResponse
-from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse
 from django.db.models.fields.related import ManyToManyField
 
 from .models import Rin
 
+tt_ksuji = str.maketrans('一二三四五六七八九〇壱弐参', '1234567890123')
 
-def to_dict(instance):
-    opts = instance._meta
-    data = {}
-    for f in opts.concrete_fields + opts.many_to_many:
-        if isinstance(f, ManyToManyField):
-            if instance.pk is None:
-                data[f.name] = []
+re_suji = re.compile(r'[十拾百千万億兆\d]+')
+re_kunit = re.compile(r'[十拾百千]|\d+')
+re_manshin = re.compile(r'[万億兆]|[^万億兆]+')
+
+TRANSUNIT = {'十': 10,
+             '拾': 10,
+             '百': 100,
+             '千': 1000}
+TRANSMANS = {'万': 10000,
+             '億': 100000000,
+             '兆': 1000000000000}
+
+
+def kansuji2arabic(kstring, sep=False):
+    """漢数字をアラビア数字に変換"""
+
+    def _transvalue(sj, re_obj=re_kunit, transdic=TRANSUNIT):
+        unit = 1
+        result = 0
+        for piece in reversed(re_obj.findall(sj)):
+            if piece in transdic:
+                if unit > 1:
+                    result += unit
+                unit = transdic[piece]
             else:
-                data[f.name] = list(f.value_from_object(instance).values_list('pk', flat=True))
-        else:
-            data[f.name] = f.value_from_object(instance)
-    return data
+                val = int(piece) if piece.isdecimal() else _transvalue(piece)
+                result += val * unit
+                unit = 1
+
+        if unit > 1:
+            result += unit
+
+        return result
+
+    transuji = kstring.translate(tt_ksuji)
+    for suji in sorted(set(re_suji.findall(transuji)), key=lambda s: len(s),
+                           reverse=True):
+        if not suji.isdecimal():
+            arabic = _transvalue(suji, re_manshin, TRANSMANS)
+            arabic = '{:,}'.format(arabic) if sep else str(arabic)
+            transuji = transuji.replace(suji, arabic)
+
+    return transuji
 
 
 def main_page(request):
@@ -30,7 +61,7 @@ def main_page(request):
     :return:
     """
     context = {
-        'records': Rin.objects.all()
+        'records': Rin.objects.all().order_by('-created_at')
     }
     return render(request, 'web/index.html', context)
 
@@ -44,8 +75,12 @@ def insert_record(request):
     if request.method == 'POST':
         record = request.POST.get('record')
         # TODO: ここでよしなに分割する
+        record = kansuji2arabic(record)
+        try:
+            diameter = int(''.join(re.findall('[0-9]', record)))
+        except:
+            diameter = 22
         tree_species = '唐松'
-        diameter = 22
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         # latitude = 13.625335
@@ -56,7 +91,7 @@ def insert_record(request):
         r.save()
 
     context = {
-        'records': Rin.objects.all()
+        'records': Rin.objects.all().order_by('-created_at')
     }
     return render(request, 'web/index.html', context)
 
@@ -68,7 +103,7 @@ def statistic_page(request):
     :return:
     """
     context = {
-        'records': Rin.objects.all()
+        'records': Rin.objects.all().order_by('-created_at')
     }
     return render(request, 'web/statistics.html', context)
 

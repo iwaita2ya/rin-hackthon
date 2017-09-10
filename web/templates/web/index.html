@@ -53,6 +53,7 @@
             <!-- /#sidebar-wrapper -->
             <div id="page-content-wrapper" style="margin-left:20px;">
                 <div class="container">
+                    <img src="{% static 'img/icon.png' %}" width="150" height="140">
                     <form role="form" method="post" action="{% url 'insert_record' %}">
                         {% csrf_token %}
                         <p> 音声入力を開始する </p>
