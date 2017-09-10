@@ -4,7 +4,7 @@ var m_mono = new L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y
 
 var map = L.map('map', {
     center: [35.6892463, 139.6918553],
-    zoom: 18,
+    zoom: 17,
     zoomControl: true,
     layers: [m_mono]
 });

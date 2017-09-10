@@ -103,5 +103,5 @@ def location_json(request):
     :param request:
     :return:
     """
-    serialized_queryset = serializers.serialize('json', Rin.objects.all().order_by('created_at'))
+    serialized_queryset = serializers.serialize('json', Rin.objects.all().order_by('-created_at'))
     return HttpResponse(serialized_queryset, content_type='application/json')
