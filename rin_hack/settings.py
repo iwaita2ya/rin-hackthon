@@ -26,7 +26,7 @@ SECRET_KEY = '=fwz(e7h=)aaf@mt_*)zi&_ng0jbp$=g*=ye)o66)2f=xo5=&9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ikeda.happy-child.jp']
+ALLOWED_HOSTS = ['ikeda.happy-child.jp', '127.0.0.1']
 
 
 # Application definition

@@ -189,7 +189,7 @@
     });
 
     function Setup() {
-        recognizer = RecognizerSetup(SDK, SDK.RecognitionMode.Interactive, languageOptions.value, SDK.SpeechResultFormat[formatOptions.value], key);
+        recognizer = RecognizerSetup(SDK, SDK.RecognitionMode.Interactive, languageOptions, SDK.SpeechResultFormat[formatOptions.value], key);
     }
 
     function UpdateStatus(status) {
