@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sbname',
+        'USER': 'username',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'PASSWORD': 'password',
+    }
+}
+# for psycopg2
+# http://stackoverflow.com/questions/20170895/mac-virtualenv-pip-postgresql-error-pg-config-executable-not-found

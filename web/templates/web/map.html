@@ -1,0 +1,78 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Title</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}" type="text/css">
+
+    <script src="{% static 'library/leaflet-0.7.3/leaflet.js' %}"></script>
+    <link href="{% static 'library/leaflet-0.7.3/leaflet.css' %}" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}" type="text/css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav" style="margin-left:0;">
+                    <li class="sidebar-brand">
+
+                        <a href="#menu-toggle" id="menu-toggle" style="margin-top:20px;float:right;"> <i
+                                class="fa fa-bars " style="font-size:20px !Important;" aria-hidden="true"
+                                aria-hidden="true"></i>
+
+                    </li>
+                    <li>
+                        <a href="{% url 'main_page' %}"><i class="fa fa-sort-alpha-asc " aria-hidden="true"> </i> <span
+                                style="margin-left:10px;"> 調査記録 </span> </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'statistic_page' %}"> <i class="fa fa-play-circle-o " aria-hidden="true"> </i>
+                            <span
+                                    style="margin-left:10px;"> 調査状況 </span> </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'map_page' %}"> <i class="fa fa-puzzle-piece" aria-hidden="true"> </i> <span
+                                style="margin-left:10px;"> 調査状況MAP </span> </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /#sidebar-wrapper -->
+            <!-- /#sidebar-wrapper -->
+        </div>
+    </div>
+</div>
+<div id="map"></div>
+<script src="{% static 'js/script.js' %}"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+    $.getJSON("{% url 'location_json' %}", function (data) {
+        data.forEach(function (d) {
+            d = d['fields'];
+            L.marker([d.latitude, d.longitude])
+                    .bindPopup("<p>樹種: " + d.tree_species + "<br>直径: " + d.diameter + "<br>" + d.created_at + "</p>")
+                    .addTo(map)
+                    .openPopup();
+        });
+    })
+</script>
+</body>
+</html>
