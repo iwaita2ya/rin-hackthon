@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^api/location/$', location_json, name='location_json'),
     url(r'^api/insert/$', insert_record, name='insert_record'),
     url(r'^api/delete/$', delete_record, name='delete_record'),
+    url(r'^api/check', check_sentence, name='check_sentence'),
 ]

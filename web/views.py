@@ -3,7 +3,8 @@ import re
 from django.shortcuts import render, get_object_or_404
 from django.core import serializers
 from django.http import HttpResponse
-from django.db.models.fields.related import ManyToManyField
+
+from .parser import default_parser
 
 from .models import Rin
 
@@ -54,6 +55,18 @@ def kansuji2arabic(kstring, sep=False):
     return transuji
 
 
+def extract_tree_name(sentence):
+    """文から樹木種を抽出する"""
+    for morph in default_parser.parse(sentence):
+        # 構文解析結果が空であった場合スキップする
+        if not morph.surface.strip():
+            continue
+        data = morph.feature.split(',')
+        if data[0] == '名詞' and data[1] in ('一般', '固有名詞'):
+            return data[7]
+    return None
+
+
 def main_page(request):
     """
     調査結果を記録するページ
@@ -66,6 +79,24 @@ def main_page(request):
     return render(request, 'web/index.html', context)
 
 
+def extract_tree_diameter(text):
+    text = kansuji2arabic(text)
+    try:
+        diameter = int(''.join(re.findall('[0-9]', text)))
+        return diameter
+    except:
+        return None
+
+
+def check_sentence(request):
+    """ 音声認識結果を返す """
+    text = request.GET['text']
+    diameter = extract_tree_diameter(text)
+    tree_species = extract_tree_name(text)
+
+    return HttpResponse('{}, {}'.format(tree_species, diameter))
+
+
 def insert_record(request):
     """
     postされた情報を記憶する
@@ -74,21 +105,16 @@ def insert_record(request):
     """
     if request.method == 'POST':
         record = request.POST.get('record')
-        # TODO: ここでよしなに分割する
-        record = kansuji2arabic(record)
-        try:
-            diameter = int(''.join(re.findall('[0-9]', record)))
-        except:
-            diameter = 22
-        tree_species = '唐松'
-        latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')
-        # latitude = 13.625335
-        # longitude = 132.64645
+        diameter = extract_tree_diameter(record)
+        tree_species = extract_tree_name(record)
 
-        # save
-        r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
-        r.save()
+        if diameter and tree_species:
+            latitude = request.POST.get('latitude')
+            longitude = request.POST.get('longitude')
+
+            # save
+            r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
+            r.save()
 
     context = {
         'records': Rin.objects.all().order_by('-created_at')

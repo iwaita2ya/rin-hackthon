@@ -117,3 +117,5 @@ STATIC_ROOT = '/home/deploy/rin-hackthon/sitestatic'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+NEOLOGD_DIR = os.path.join(BASE_DIR, 'resources/dic/neologd/')

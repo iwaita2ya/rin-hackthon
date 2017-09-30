@@ -119,7 +119,8 @@
 
     <!-- Browser Hooks -->
     <script>
-        var startBtn, stopBtn, hypothesisDiv, phraseDiv, statusDiv, key, languageOptions, formatOptions;
+        var startBtn, stopBtn, hypothesisDiv, phraseDiv, statusDiv, key, languageOptions, formatOptions, recognized_text;
+        var url, result;
         var SDK;
         var recognizer;
 
@@ -173,11 +174,19 @@
         function OnSpeechEndDetected() {
             stopBtn.disabled = true;
         }
-
-        function UpdateRecognizedPhrase(json) {
-            phraseDiv.innerHTML = JSON.parse(json)["DisplayText"];
+        function httpGet(theUrl) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", theUrl, false); // false for synchronous request
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
         }
+        function UpdateRecognizedPhrase(json) {
+            recognized_text = JSON.parse(json)["DisplayText"];
+            url = '{% url 'check_sentence' %}' + '?text=' + recognized_text;
+            result = httpGet(url);
 
+            phraseDiv.innerHTML = result;
+        }
         function OnComplete() {
             startBtn.disabled = false;
             stopBtn.disabled = true;

@@ -4,6 +4,7 @@ django-actionlog==0.9.12
 django-bootstrap-form==3.2.1
 django-request==1.5.1
 fluent-logger==0.4.6
+igo-python==0.9.9
 msgpack-python==0.4.8
 numpy==1.12.0
 oauthlib==2.0.1
