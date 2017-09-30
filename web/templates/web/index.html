@@ -1,85 +1,57 @@
+{% extends "base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}Test{% endblock title %}
+{% block extrahead %}
+{% endblock %}
 
-<head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Title</title>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
-
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
-</head>
-
-<body>
-<div class="container">
-    <div class="row">
-        <div id="wrapper">
-            <!-- Sidebar -->
-            <div id="sidebar-wrapper">
-                <ul class="sidebar-nav" style="margin-left:0;">
-                    <li class="sidebar-brand">
-
-                        <a href="#menu-toggle" id="menu-toggle" style="margin-top:20px;float:right;"> <i
-                                class="fa fa-bars " style="font-size:20px !Important;" aria-hidden="true"
-                                aria-hidden="true"></i>
-
-                    </li>
-                    <li>
-                        <a href="{% url 'main_page' %}"><i class="fa fa-sort-alpha-asc " aria-hidden="true"> </i>
-                            <span
-                                    style="margin-left:10px;"> 調査記録 </span> </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'statistic_page' %}"> <i class="fa fa-play-circle-o "
-                                                                 aria-hidden="true"> </i>
-                            <span
-                                    style="margin-left:10px;"> 調査状況 </span> </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'map_page' %}"> <i class="fa fa-puzzle-piece" aria-hidden="true"> </i> <span
-                                style="margin-left:10px;"> 調査状況MAP </span> </a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /#sidebar-wrapper -->
-            <div id="page-content-wrapper" style="margin-left:20px;">
-                <div class="container">
-                    <img src="{% static 'img/icon.png' %}" width="150" height="140">
+{% block content %}
+    <!-- about -->
+    <div class="about" id="about" style="margin-top: 10%">
+        <div class="container">
+            <h3 class="w3l-title">毎木調査</h3>
+            <p> スタートボタンを押すことで音声認識がスタートし, 樹木の「胸高周囲長、種名」等を自動認識します</p>
+            <p> 例：カラマツ, 25cm </p>
+            <p> 認識結果を確認し, 間違いがなければ登録ボタンを押すことで記録します </p>
+            <p> 現在位置情報も同時に記録されます</p>
+        </div>
+    </div>
+    <!-- //about -->
+    <!-- record -->
+    <div class="testimonials">
+        <div class="container">
+            <h3 class="w3l-title">記録</h3>
+            <div class="sap_tabs">
+                <div id="horizontalTab" style="display: block; width: 100%; margin: 0px;">
                     <form role="form" method="post" action="{% url 'insert_record' %}">
                         {% csrf_token %}
-                        <p> 音声入力を開始する </p>
                         <button id="startBtn" disabled="disabled" type="button" class="btn btn-danger">
                             Start
                         </button>
-                        <button id="stopBtn" disabled="disabled" type="button" class="btn btn-dark">Stop
-                        </button>
-                        <br>
-                        入力内容: <span id="hypothesisDiv"></span>
-                        <textarea id="phraseDiv" style="width:500px;height:200px" name="record"
+                        <button id="stopBtn" disabled="disabled" type="button" class="btn btn-dark">Stop</button>
+                        <p style="color: white; text-align: left">音声認識結果 <span id="hypothesisDiv"></span></p>
+                        <textarea id="phraseDiv" style="width: 100%;height:100px" name="record"
                                   required></textarea>
                         <br>
-                        状態: <span id="statusDiv"></span><br>
+                        <p style="color: white; text-align: left;">認識状況 <span id="statusDiv"></span></p>
                         <br>
-                        緯度: <span id="latitude"></span><br>
-                        経度: <span id="longitude"></span><br>
+                        <p style="color: white; text-align: left">緯度<span id="latitude"></span></p>
+                        <p style="color: white; text-align: left">経度<span id="longitude"></span></p>
                         <span id="getErrMag"></span>
-                        <br>
                         <input type="hidden" name="latitude" id="latitude_v">
                         <input type="hidden" name="longitude" id="longitude_v">
                         <button type="submit" class="btn btn-danger">登録する</button>
                     </form>
                 </div>
             </div>
-            <div id="page-content-wrapper" style="margin-left:20px;">
+        </div>
+    </div>
+    <!-- //record -->
+
+    <!-- status -->
+    <div class="special">
+        <div class="container">
+            <h3 class="w3l-title"> 経過 </h3>
+            <div class="col-md-5 special-wthreegrids">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -101,105 +73,117 @@
                     </table>
                     <!-- /#page-content-wrapper -->
                 </div>
+                <div class="clearfix"></div>
             </div>
-            <!-- /#wrapper -->
+        </div>
+        <!-- //special -->
+        <!-- news -->
+        <div class="news" id="news">
+            <div class="container">
+                <h3 class="w3l-title"> 連絡事項　</h3>
+                <div class="col-md-6 news-grids">
+                    <div class="news-grids-right">
+                        <h5>2017-10-1 12:00:51</h5>
+                        <p> 降水確率 70%, 大雨の恐れあり</p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-md-6 news-grids">
+                    <div class="news-grids-right">
+                        <h5>2017-10-1 10:00:51</h5>
+                        <p> 部長: 昨日は雨で足場が悪いので, 特に気をつけて作業すること</p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
-</div>
+    <!-- //news -->
 
-<!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/side_menu.js' %}"></script>
-<!-- Get Current Location Script -->
-<script type="text/javascript"
-        src="https://maps.google.com/maps/api/js?key=AIzaSyC7vPiNQoNmlQID2URBMw5XYo29vz1Kwd4&libraries=place"></script>
-<script type="text/javascript" src="{% static 'js/current_location.js' %}"></script>
-<!-- The SDK has a dependency on requirejs (http://requirejs.org/). -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js"></script>
-<script>
-    // Special handling to let the sample work when loaded directly from file system.
-    if (window.location.protocol == "file:") {
-        document.write('\<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js">\<\/script>');
-    }
-</script>
+    <!-- Get Current Location Script -->
+    <script type="text/javascript"
+            src="https://maps.google.com/maps/api/js?key=AIzaSyC7vPiNQoNmlQID2URBMw5XYo29vz1Kwd4&libraries=place"></script>
+    <script type="text/javascript" src="{% static 'js/current_location.js' %}"></script>
+    <!-- The SDK has a dependency on requirejs (http://requirejs.org/). -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js"></script>
+    <script>
+        // Special handling to let the sample work when loaded directly from file system.
+        if (window.location.protocol == "file:") {
+            document.write('\<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js">\<\/script>');
+        }
+    </script>
 
-<!-- SDK REFERENCE -->
-<script type="text/javascript" src="{% static 'js/speech.browser.sdk.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/recognize_speech.js' %}"></script>
+    <!-- SDK REFERENCE -->
+    <script type="text/javascript" src="{% static 'js/speech.browser.sdk.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/recognize_speech.js' %}"></script>
 
-<!-- Browser Hooks -->
-<script>
-    var startBtn, stopBtn, hypothesisDiv, phraseDiv, statusDiv, key, languageOptions, formatOptions;
-    var SDK;
-    var recognizer;
+    <!-- Browser Hooks -->
+    <script>
+        var startBtn, stopBtn, hypothesisDiv, phraseDiv, statusDiv, key, languageOptions, formatOptions;
+        var SDK;
+        var recognizer;
 
-    key = "b33016693c5a4b629f182399912d4533";
-    languageOptions = "ja-JP";
-    formatOptions = "Simple";
+        key = "b33016693c5a4b629f182399912d4533";
+        languageOptions = "ja-JP";
+        formatOptions = "Simple";
 
-    document.addEventListener("DOMContentLoaded", function () {
-        createBtn = document.getElementById("createBtn");
-        startBtn = document.getElementById("startBtn");
-        stopBtn = document.getElementById("stopBtn");
-        phraseDiv = document.getElementById("phraseDiv");
-        hypothesisDiv = document.getElementById("hypothesisDiv");
-        statusDiv = document.getElementById("statusDiv");
+        document.addEventListener("DOMContentLoaded", function () {
+            createBtn = document.getElementById("createBtn");
+            startBtn = document.getElementById("startBtn");
+            stopBtn = document.getElementById("stopBtn");
+            phraseDiv = document.getElementById("phraseDiv");
+            hypothesisDiv = document.getElementById("hypothesisDiv");
+            statusDiv = document.getElementById("statusDiv");
 
-        startBtn.addEventListener("click", function () {
-            if (!recognizer) {
-                Setup();
-            }
-            hypothesisDiv.innerHTML = "";
-            phraseDiv.innerHTML = "";
-            RecognizerStart(SDK, recognizer);
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
+            startBtn.addEventListener("click", function () {
+                if (!recognizer) {
+                    Setup();
+                }
+                hypothesisDiv.innerHTML = "";
+                phraseDiv.innerHTML = "";
+                RecognizerStart(SDK, recognizer);
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            });
+
+            stopBtn.addEventListener("click", function () {
+                RecognizerStop(SDK);
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            });
+
+            Initialize(function (speechSdk) {
+                SDK = speechSdk;
+                startBtn.disabled = false;
+            });
         });
 
-        stopBtn.addEventListener("click", function () {
-            RecognizerStop(SDK);
+        function Setup() {
+            recognizer = RecognizerSetup(SDK, SDK.RecognitionMode.Interactive, languageOptions, SDK.SpeechResultFormat[formatOptions.value], key);
+        }
+
+        function UpdateStatus(status) {
+            statusDiv.innerHTML = status;
+        }
+
+        function UpdateRecognizedHypothesis(text) {
+            hypothesisDiv.innerHTML = text;
+        }
+
+        function OnSpeechEndDetected() {
+            stopBtn.disabled = true;
+        }
+
+        function UpdateRecognizedPhrase(json) {
+            phraseDiv.innerHTML = JSON.parse(json)["DisplayText"];
+        }
+
+        function OnComplete() {
             startBtn.disabled = false;
             stopBtn.disabled = true;
-        });
-
-        Initialize(function (speechSdk) {
-            SDK = speechSdk;
-            startBtn.disabled = false;
-        });
-    });
-
-    function Setup() {
-        recognizer = RecognizerSetup(SDK, SDK.RecognitionMode.Interactive, languageOptions, SDK.SpeechResultFormat[formatOptions.value], key);
-    }
-
-    function UpdateStatus(status) {
-        statusDiv.innerHTML = status;
-    }
-
-    function UpdateRecognizedHypothesis(text) {
-        hypothesisDiv.innerHTML = text;
-    }
-
-    function OnSpeechEndDetected() {
-        stopBtn.disabled = true;
-    }
-
-    function UpdateRecognizedPhrase(json) {
-        phraseDiv.innerHTML = JSON.parse(json)["DisplayText"];
-    }
-
-    function OnComplete() {
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-    }
-</script>
-<script>
-    cmanPosGet();
-</script>
-
-</body>
-</html>
+        }
+    </script>
+    <script>
+        cmanPosGet();
+    </script>
+{% endblock %}
