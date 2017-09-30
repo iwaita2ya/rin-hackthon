@@ -63,7 +63,10 @@ def extract_tree_name(sentence):
             continue
         data = morph.feature.split(',')
         if data[0] == '名詞' and data[1] in ('一般', '固有名詞'):
-            return data[7]
+            try:
+                return data[7]
+            except:
+                return None
     return None
 
 
@@ -113,9 +116,13 @@ def insert_record(request):
             longitude = request.POST.get('longitude')
 
             # save
-            if type(latitude) == float:
+            try:
+                latitude = float(latitude)
+                longitude = float(longitude)
                 r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
                 r.save()
+            except:
+                None
     context = {
         'records': Rin.objects.all().order_by('-created_at')[:7]
     }
