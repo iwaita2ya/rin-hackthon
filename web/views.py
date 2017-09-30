@@ -112,10 +112,9 @@ def insert_record(request):
             latitude = request.POST.get('latitude')
             longitude = request.POST.get('longitude')
 
-            if latitude and longitude:
-                # save
-                r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
-                r.save()
+            # save
+            r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
+            r.save()
 
     context = {
         'records': Rin.objects.all().order_by('-created_at')[:7]
