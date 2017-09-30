@@ -117,7 +117,7 @@ def insert_record(request):
             r.save()
 
     context = {
-        'records': Rin.objects.all().order_by('-created_at')
+        'records': Rin.objects.all().order_by('-created_at')[:7]
     }
     return render(request, 'web/index.html', context)
 
@@ -129,7 +129,7 @@ def statistic_page(request):
     :return:
     """
     context = {
-        'records': Rin.objects.all().order_by('-created_at')
+        'records': Rin.objects.all().order_by('-created_at')[:7]
     }
     return render(request, 'web/statistics.html', context)
 
@@ -144,7 +144,7 @@ def delete_record(request):
     record = get_object_or_404(Rin, pk=record_id)
     record.delete()
     context = {
-        'records': Rin.objects.all()
+        'records': Rin.objects.all().order_by('-created_at')[:7]
     }
     return render(request, 'web/statistics.html', context)
 
@@ -164,5 +164,5 @@ def location_json(request):
     :param request:
     :return:
     """
-    serialized_queryset = serializers.serialize('json', Rin.objects.all().order_by('-created_at'))
+    serialized_queryset = serializers.serialize('json', Rin.objects.all().order_by('-created_at')[:7])
     return HttpResponse(serialized_queryset, content_type='application/json')
