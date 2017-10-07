@@ -1,25 +1,39 @@
-// Resolve the SDK dependecy using RequireJs
-require(["Speech.Browser.Sdk"], function(SDK) {
-    // Now start using the SDK
-});
+        // On doument load resolve the SDK dependecy
+        function Initialize(onComplete) {
+            require(["Speech.Browser.Sdk"], function(SDK) {
+                onComplete(SDK);
+            });
+        }
 
-// Setup the recongizer
-function RecognizerSetup(SDK, recognitionMode, language, format, subscriptionKey) {
-    let recognizerConfig = new SDK.RecognizerConfig(
-        new SDK.SpeechConfig(
-            new SDK.Context(
-                new SDK.OS(navigator.userAgent, "Browser", null),
-                new SDK.Device("SpeechSample", "SpeechSample", "1.0.00000"))),
-        recognitionMode, // SDK.RecognitionMode.Interactive  (Options - Interactive/Conversation/Dictation)
-        language, // Supported laguages are specific to each recognition mode. Refer to docs.
-        format); // SDK.SpeechResultFormat.Simple (Options - Simple/Detailed)
+        // Setup the recongizer
+        function RecognizerSetup(SDK, recognitionMode, language, format, subscriptionKey) {
 
-    // Alternatively use SDK.CognitiveTokenAuthentication(fetchCallback, fetchOnExpiryCallback) for token auth
-    let authentication = new SDK.CognitiveSubscriptionKeyAuthentication(subscriptionKey);
+            switch (recognitionMode) {
+                case "Interactive" :
+                    recognitionMode = SDK.RecognitionMode.Interactive;
+                    break;
+                case "Conversation" :
+                    recognitionMode = SDK.RecognitionMode.Conversation;
+                    break;
+                case "Dictation" :
+                    recognitionMode = SDK.RecognitionMode.Dictation;
+                    break;
+                default:
+                    recognitionMode = SDK.RecognitionMode.Interactive;
+            }
+            var recognizerConfig = new SDK.RecognizerConfig(
+                new SDK.SpeechConfig(
+                    new SDK.Context(
+                        new SDK.OS(navigator.userAgent, "Browser", null),
+                        new SDK.Device("SpeechSample", "SpeechSample", "1.0.00000"))),
+                recognitionMode,
+                language, // Supported laguages are specific to each recognition mode. Refer to docs.
+                format); // SDK.SpeechResultFormat.Simple (Options - Simple/Detailed)
+            // Alternatively use SDK.CognitiveTokenAuthentication(fetchCallback, fetchOnExpiryCallback) for token auth
+            var authentication = new SDK.CognitiveSubscriptionKeyAuthentication(subscriptionKey);
 
-    return SDK.Recognizer.Create(recognizerConfig, authentication);
-}
-
+            return SDK.CreateRecognizer(recognizerConfig, authentication);
+        }
 function RecognizerStart(SDK, recognizer) {
     recognizer.Recognize((event) => {
         /*
