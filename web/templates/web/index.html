@@ -107,12 +107,6 @@
     <script type="text/javascript" src="{% static 'js/current_location.js' %}"></script>
     <!-- The SDK has a dependency on requirejs (http://requirejs.org/). -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js"></script>
-    <script>
-        // Special handling to let the sample work when loaded directly from file system.
-        if (window.location.protocol == "file:") {
-            document.write('\<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js">\<\/script>');
-        }
-    </script>
 
     <!-- SDK REFERENCE -->
     <script type="text/javascript" src="{% static 'js/speech.browser.sdk.js' %}"></script>
@@ -125,7 +119,7 @@
         var SDK;
         var recognizer;
 
-        key = "b33016693c5a4b629f182399912d4533";
+        key = "8e3915f62c9545c696f3d715691ca3ac";
         languageOptions = "ja-JP";
         formatOptions = "Simple";
 

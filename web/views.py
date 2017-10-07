@@ -1,4 +1,5 @@
 import re
+import requests
 
 from django.shortcuts import render, get_object_or_404
 from django.core import serializers
@@ -21,6 +22,7 @@ TRANSUNIT = {'十': 10,
 TRANSMANS = {'万': 10000,
              '億': 100000000,
              '兆': 1000000000000}
+URL = 'http://52.199.198.108/field_records'
 
 
 def kansuji2arabic(kstring, sep=False):
@@ -85,6 +87,7 @@ def main_page(request):
 def extract_tree_diameter(text):
     text = kansuji2arabic(text)
     try:
+        print(text)
         diameter = int(''.join(re.findall('[0-9]', text)))
         return diameter
     except:
@@ -121,6 +124,14 @@ def insert_record(request):
                 longitude = float(longitude)
                 r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
                 r.save()
+
+                record = {
+                    'tyokkei': diameter,
+                    'jukou': 20,
+                    'lat': latitude,
+                    'lng': longitude
+                }
+                post_record(record)
             except:
                 None
     context = {
@@ -173,3 +184,31 @@ def location_json(request):
     """
     serialized_queryset = serializers.serialize('json', Rin.objects.all().order_by('-created_at')[:7])
     return HttpResponse(serialized_queryset, content_type='application/json')
+
+
+def post_record(record):
+    """
+    取得した内容を指定された場所にPOSTする
+    :param record:
+    :return:
+    """
+    context = {
+        'field_record[kanriku]': 12,
+        'field_record[nendo]': 2017,
+        'field_record[rinpan]': 78,
+        'field_record[bakku]': '60A1',
+        'field_record[shiban]': 1,
+        'field_record[shouhan]': 62,
+        'field_record[kubun]': 21,
+        'field_record[daihyou]': 23,
+        'field_record[field_record_details_attributes][0][bangou]': 1,
+        'field_record[field_record_details_attributes][0][jushu]': 23,
+        'field_record[field_record_details_attributes][0][tyokkei]': record['tyokkei'],
+        'field_record[field_record_details_attributes][0][jukou]': record['jukou'],
+        'field_record[field_record_details_attributes][0][hini]': 1,
+        'field_record[field_record_details_attributes][0][budomari]': 50,
+        'field_record[field_record_details_attributes][0][lat]': record['lat'],
+        'field_record[field_record_details_attributes][0][lon]': record['lng']
+    }
+    r = requests.post(URL, context)
+    return
