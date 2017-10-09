@@ -78,39 +78,69 @@ def extract_digit_words(sentence):
     """
     word_first = []
     word_second = []
-    before_digit = ''
     word_first_frag = True
     word_second_frag = True
     for morph in default_parser.parse(sentence):
+        # 構文解析結果が空であった場合スキップする
+        if not morph.surface.strip():
+            continue
         data = morph.feature.split(',')
-        if data[7] == 'ニソイチ':
-            if word_first_frag:
-                word_first.append('二十一')
-                word_first_frag = False
-                before_digit = ''
-            elif word_second_frag:
-                word_second.append('二十一')
-                word_second_frag = False
-                before_digit = ''
-        if data[7] == 'ニジュウサン':
-            if word_first_frag:
-                word_first.append('二十三')
-                word_first_frag = False
-                before_digit = ''
-            elif word_second_frag:
-                word_second.append('二十三')
-                word_second_frag = False
-                before_digit = ''
+        try:
+            if data[7] == 'ニソイチ':
+                if word_first_frag:
+                    word_first.append('二十一')
+                    word_first_frag = False
+                elif word_second_frag:
+                    word_second.append('二十一')
+                    word_second_frag = False
+            if data[7] == 'ニジュウサン':
+                if word_first_frag:
+                    word_first.append('二十三')
+                    word_first_frag = False
+                elif word_second_frag:
+                    word_second.append('二十三')
+                    word_second_frag = False
+            if data[7] == 'サンジュウサン':
+                if word_first_frag:
+                    word_first.append('三十三')
+                    word_first_frag = False
+                elif word_second_frag:
+                    word_second.append('三十三')
+                    word_second_frag = False
+            if data[7] == 'ツチヤ':
+                if word_first_frag:
+                    word_first.append('二十八')
+                    word_first_frag = False
+                elif word_second_frag:
+                    word_second.append('二十八')
+                    word_second_frag = False
+        except:
+            None
         if data[1] == '数' and word_first_frag:
-            if before_digit == '十':
-                word_first_frag = False
             word_first.append(morph.surface)
-            before_digit = morph.surface
+            if len(word_first) >= 1:
+                if word_first[0] == '十':
+                    if len(word_first) >= 2 and word_first.count('十') == 1:
+                        word_first_frag = False
+
+            if len(word_first) >= 2 and word_first.count('十') == 0:
+                word_first_frag = False
+            elif len(word_first) >= 3 and word_first.count('十') == 1:
+                word_first_frag = False
+
         elif data[1] == '数' and not word_first_frag and word_second_frag:
-            if before_digit == '十':
-                word_second_frag = False
             word_second.append(morph.surface)
-            before_digit = morph.surface
+            if len(word_second) > 1:
+                if word_second[0] == '十':
+                    if len(word_second) >= 2 and word_second.count('十') == 1:
+                        word_second_frag = False
+
+            if len(word_second) >= 2 and word_second.count('十') == 0:
+                word_second_frag = False
+            elif len(word_second) >= 3 and word_second.count('十') == 1:
+                word_second_frag = False
+    if not word_first or not word_second:
+        return None, None
     diameter = kansuji2arabic(''.join(word_first))
     jukou = kansuji2arabic(''.join(word_second))
     return diameter, jukou
