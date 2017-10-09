@@ -9,8 +9,8 @@
     <div class="about" id="about" style="margin-top: 10%">
         <div class="container">
             <h3 class="w3l-title">毎木調査</h3>
-            <p> スタートボタンを押すことで音声認識がスタートし, 樹木の「胸高周囲長、種名」等を自動認識します</p>
-            <p> 例：カラマツ, 25cm </p>
+            <p> スタートボタンを押すことで音声認識がスタートし, 樹木の「種名, 胸高周囲長」を自動認識します</p>
+            <p> 例：カラマツ, 25cm, 28m (種名, 直径, 樹高の順番)</p>
             <p> 認識結果を確認し, 間違いがなければ登録ボタンを押すことで記録します </p>
             <p> 現在位置情報も同時に記録されます</p>
             <p>(位置情報が取得できない場合, データは登録されません)</p>
@@ -59,6 +59,7 @@
                         <tr>
                             <th>樹種</th>
                             <th>直径</th>
+                            <th>樹高</th>
                             <th>記録時間</th>
                         </tr>
                         </thead>
@@ -67,6 +68,7 @@
                             <tr>
                                 <td>{{ record.tree_species }}</td>
                                 <td>{{ record.diameter }}</td>
+                                <td>{{ record.jukou }}</td>
                                 <td>{{ record.created_at }}</td>
                             </tr>
                         {% endfor %}

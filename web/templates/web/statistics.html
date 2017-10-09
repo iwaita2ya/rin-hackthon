@@ -17,6 +17,7 @@
                         <tr>
                             <th>樹種</th>
                             <th>直径</th>
+                            <th>樹高</th>
                             <th>記録時間</th>
                         </tr>
                         </thead>
@@ -25,6 +26,7 @@
                             <tr>
                                 <td>{{ record.tree_species }}</td>
                                 <td>{{ record.diameter }}</td>
+                                <td>{{ record.chokei }}</td>
                                 <td>{{ record.created_at }}</td>
                                 <td><a href="{% url 'delete_record' %}?id={{ record.id }}">削除</a>
                                 </td>

@@ -72,6 +72,50 @@ def extract_tree_name(sentence):
     return None
 
 
+def extract_digit_words(sentence):
+    """
+    数字を示す単語を抽出する
+    """
+    word_first = []
+    word_second = []
+    before_digit = ''
+    word_first_frag = True
+    word_second_frag = True
+    for morph in default_parser.parse(sentence):
+        data = morph.feature.split(',')
+        if data[7] == 'ニソイチ':
+            if word_first_frag:
+                word_first.append('二十一')
+                word_first_frag = False
+                before_digit = ''
+            elif word_second_frag:
+                word_second.append('二十一')
+                word_second_frag = False
+                before_digit = ''
+        if data[7] == 'ニジュウサン':
+            if word_first_frag:
+                word_first.append('二十三')
+                word_first_frag = False
+                before_digit = ''
+            elif word_second_frag:
+                word_second.append('二十三')
+                word_second_frag = False
+                before_digit = ''
+        if data[1] == '数' and word_first_frag:
+            if before_digit == '十':
+                word_first_frag = False
+            word_first.append(morph.surface)
+            before_digit = morph.surface
+        elif data[1] == '数' and not word_first_frag and word_second_frag:
+            if before_digit == '十':
+                word_second_frag = False
+            word_second.append(morph.surface)
+            before_digit = morph.surface
+    diameter = kansuji2arabic(''.join(word_first))
+    jukou = kansuji2arabic(''.join(word_second))
+    return diameter, jukou
+
+
 def main_page(request):
     """
     調査結果を記録するページ
@@ -84,23 +128,18 @@ def main_page(request):
     return render(request, 'web/index.html', context)
 
 
-def extract_tree_diameter(text):
-    text = kansuji2arabic(text)
-    try:
-        print(text)
-        diameter = int(''.join(re.findall('[0-9]', text)))
-        return diameter
-    except:
-        return None
-
-
 def check_sentence(request):
     """ 音声認識結果を返す """
     text = request.GET['text']
-    diameter = extract_tree_diameter(text)
+    diameter, jukou = extract_digit_words(text)
     tree_species = extract_tree_name(text)
 
-    return HttpResponse('{}, {}'.format(tree_species, diameter))
+    return HttpResponse('{}, 直径: {}, 樹高: {}'.format(tree_species, diameter, jukou))
+
+
+def extract_digit(words):
+    digites = [x for x in re.findall('[0-9]{,2}', words) if x != '']
+    return digites[0], digites[1]
 
 
 def insert_record(request):
@@ -111,7 +150,7 @@ def insert_record(request):
     """
     if request.method == 'POST':
         record = request.POST.get('record')
-        diameter = extract_tree_diameter(record)
+        diameter, jukou = extract_digit(record)
         tree_species = extract_tree_name(record)
 
         if diameter and tree_species:
@@ -122,12 +161,13 @@ def insert_record(request):
             try:
                 latitude = float(latitude)
                 longitude = float(longitude)
-                r = Rin(tree_species=tree_species, diameter=diameter, latitude=latitude, longitude=longitude)
+                r = Rin(tree_species=tree_species, diameter=diameter, jukou=jukou, latitude=latitude,
+                        longitude=longitude)
                 r.save()
 
                 record = {
                     'tyokkei': diameter,
-                    'jukou': 20,
+                    'jukou': jukou,
                     'lat': latitude,
                     'lng': longitude
                 }
